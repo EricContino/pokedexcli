@@ -2,6 +2,7 @@ package main
 
 import (
     "bufio"
+    "github.com/EricContino/pokedexcli/commands"
     "fmt"
     "os"
     "strings"
@@ -13,6 +14,7 @@ func cleanInput(text string) []string {
 
 func startRepl() {
     scanner := bufio.NewScanner(os.Stdin)
+    cmds := commands.GetCommandRegistry()
     for {
         fmt.Print("Pokedex> ")
         scanner.Scan()
@@ -22,6 +24,10 @@ func startRepl() {
             continue
         }
         commandName := clean[0]
-        fmt.Printf("Your command was: %s\n", commandName)
+        if cmd, exists := cmds[commandName]; exists {
+            cmd.Callback()
+        } else {
+            fmt.Println("Unknown command")
+        }
     }
 }
