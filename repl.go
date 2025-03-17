@@ -15,6 +15,10 @@ func cleanInput(text string) []string {
 func startRepl() {
     scanner := bufio.NewScanner(os.Stdin)
     cmds := commands.GetCommandRegistry()
+    config := commands.Config{
+        Next: commands.PokeApi_LocationAreas_BaseURL,
+        Previous: commands.PokeApi_LocationAreas_BaseURL,
+    }
     for {
         fmt.Print("Pokedex> ")
         scanner.Scan()
@@ -25,7 +29,7 @@ func startRepl() {
         }
         commandName := clean[0]
         if cmd, exists := cmds[commandName]; exists {
-            cmd.Callback()
+            cmd.Callback(&config)
         } else {
             fmt.Println("Unknown command")
         }
